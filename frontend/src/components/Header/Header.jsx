@@ -1,14 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { logout } from "../../features/auth/authSlice";
 
 
 const Header = () => {
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleLogOut = () => {
     localStorage.removeItem("token")
     dispatch(logout())
+    
+    navigate("/")
   }
   return (
     <div className="navbar bg-base-100 border-b border-gray-300 shadow-md">

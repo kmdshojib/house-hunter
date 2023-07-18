@@ -1,15 +1,24 @@
-import React from 'react'
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../features/auth/authSlice';
 
 const SignIn = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const { user } = useSelector((state) => state.auth);
+    const navigate = useNavigate()
     const dispatch = useDispatch()
+
     const handleFormSubmit = async (data) => {
         dispatch(login(data))
     }
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    }, [user, navigate]);
 
     return (
         <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-white text-gray-800 shadow-lg mx-auto mt-16">

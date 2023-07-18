@@ -9,8 +9,10 @@ function* login(action) {
         const token = user.data.data.token;
 
         localStorage.setItem("token", token);
-        const jsonData = JSON.stringify(user.data)
+        const userData = user.data.data.user;
+        const jsonData = JSON.stringify(userData)
         yield put(loginSuccess(jsonData));
+
     } catch (error) {
         yield put(loginFailure(error.message));
     }
