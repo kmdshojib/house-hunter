@@ -1,18 +1,14 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import instance from './../api/axios';
+import { login } from '../features/auth/authSlice';
 
 const SignIn = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-
+    const dispatch = useDispatch()
     const handleFormSubmit = async (data) => {
-        try {
-            const response = await instance.post("/users/login", data);
-            console.log({ response })
-        } catch (error) {
-            console.log({ error })
-        }
+        dispatch(login(data))
     }
 
     return (

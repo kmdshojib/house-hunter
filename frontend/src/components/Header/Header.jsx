@@ -1,7 +1,15 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom"
+import { logout } from "../../features/auth/authSlice";
 
 
 const Header = () => {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch()
+  const handleLogOut = () => {
+    localStorage.removeItem("token")
+    dispatch(logout())
+  }
   return (
     <div className="navbar bg-base-100 border-b border-gray-300 shadow-md">
       <div className="navbar-start">
@@ -14,7 +22,12 @@ const Header = () => {
             <li><Link>Item 1</Link></li>
             <li><Link>Item 3</Link></li>
           </ul>
-          <Link to="/signup" className='btn btn-primary btn-md'>Sign Up</Link>
+          {
+            !user ? <>
+              <Link to="/signup" className='btn btn-primary btn-md mr-3'>Sign Up</Link>
+              <Link to="/signin" className='btn btn-primary btn-md'>Sign In</Link>
+            </> : <Link onClick={handleLogOut} className='btn btn-primary btn-md'>Log Out</Link>
+          }
         </div>
         {/* mobile header */}
         <div className="dropdown">
@@ -25,6 +38,14 @@ const Header = () => {
             <li><Link>Item 1</Link></li>
             <hr />
             <li><Link>Item 3</Link></li>
+            <hr />
+            {
+              !user ? <>
+                <li><Link to="/signup" className='btn btn-primary text-sm btn-sm mb-3 mt-3'>Sign Up</Link></li>
+                <hr />
+                <li>  <Link to="/signin" className='btn btn-primary text-sm btn-sm mb-3 mt-3'>Sign In</Link></li>
+              </> : <li><Link onClick={handleLogOut} className='btn btn-primary text-sm btn-sm mb-3 mt-3'>Log Out</Link></li>
+            }
           </ul>
         </div>
       </div>

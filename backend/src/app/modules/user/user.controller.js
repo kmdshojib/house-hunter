@@ -14,7 +14,7 @@ export const createUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     const { email, password } = await req.body;
     const authToken = process.env.AUTH_TOKEN
-    
+
     const user = await userModel.findOne({ email: email });
 
     if (!user) {
