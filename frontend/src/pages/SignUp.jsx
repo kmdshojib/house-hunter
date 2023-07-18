@@ -1,15 +1,17 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import instance from './../api/axios';
 
 const SignUp = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-
+    const navigate = useNavigate()
     const handleFormSubmit = async (data) => {
         try {
             const response = await instance.post("/users/signup", data);
-            console.log({ response })
+            if (response.status === 200) {
+                navigate("/signin")
+            }
         } catch (error) {
             console.log({ error })
         }
@@ -55,7 +57,7 @@ const SignUp = () => {
                 </div>
                 <div className="space-y-2">
                     <div>
-                        <button type="submit" className="w-full px-8 py-3 font-semibold rounded text-gray-900 btn-primary ">Sign up</button>
+                        <button type="submit" className="w-full px-8 py-3 font-semibold rounded text-white btn-primary ">Sign up</button>
                     </div>
                     <p className="px-6 text-sm text-center text-gray-400">Have an account?
                         <Link to="/signin" className="hover:underline text-primary"> Sign In</Link>.
