@@ -1,18 +1,20 @@
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import instance from '../../api/axios';
 import { toast } from 'react-toastify';
 import PhoneInput from "react-phone-input-2";
+import { getHomeByIdStart } from '../../features/gethomebyid/getHomebyIdSlice';
 
-const UpdateHomeModal = () => {
+
+const UpdateHomeModal = ({userId, id, houseName, address, availableDate, city, bathrooms, roomSize, imgUrl, rent, phoneNumber, description, bedrooms }) => {
     const { control, register, handleSubmit, reset, formState: { errors } } = useForm();
 
     const { user, isLoading } = useSelector((state) => state.auth);
-
+    const dispatch = useDispatch()
     const jsonUser = JSON.parse(user)
 
-    const addHome = (data) => {
+    const updatHome = (data) => {
         const { houseName, address, availableDate, city, bathrooms, roomSize, picture, rent, phoneNumber, description, bedrooms } = data;
         const homeData = {
             houseName,
@@ -28,17 +30,19 @@ const UpdateHomeModal = () => {
             availableDate,
             userId: jsonUser._id
         };
-        instance.post("/home/addHome", homeData)
+        console.log(homeData)
+        instance.put(`/home/updateHome/${id}`, homeData)
             .then(res => {
                 if (res) {
                     reset()
-                    toast.success("Home added successfully!")
+                    dispatch(getHomeByIdStart(userId))
+                    toast.success("Home updated successfully!")
                 }
             }).catch(eror => {
                 console.error(eror)
             })
-        console.log({ homeData })
     };
+    console.log({ availableDate })
     if (isLoading) {
         return <div>Loading ...</div>
     }
@@ -48,8 +52,8 @@ const UpdateHomeModal = () => {
             <div className="modal">
                 <div className="modal-box">
                     <label htmlFor="updateHomeModal" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
-                    <h3 className="font-bold text-lg text-center">Add Home</h3>
-                    <form onSubmit={handleSubmit(addHome)}>
+                    <h3 className="font-bold text-lg text-center">Update Home</h3>
+                    <form onSubmit={handleSubmit(updatHome)}>
                         <div className="space-y-4">
                             <div>
                                 <label htmlFor="houseName" className="block mb-2 text-sm">House Name</label>
@@ -60,6 +64,7 @@ const UpdateHomeModal = () => {
                                     placeholder="House Name"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('houseName', { required: 'House Name is required', pattern: { message: 'Invalid Home Name' } })}
+                                    defaultValue={houseName}
                                 />
                                 {errors.houseName && <p className="text-red-500 text-xs">{errors.houseName.message}</p>}
                             </div>
@@ -73,6 +78,7 @@ const UpdateHomeModal = () => {
                                     placeholder="Address"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('address', { required: 'Address is required', pattern: { message: 'Invalid Home address' } })}
+                                    defaultValue={address}
                                 />
                                 {errors.address && <p className="text-red-500 text-xs">{errors.address.message}</p>}
                             </div>
@@ -86,6 +92,7 @@ const UpdateHomeModal = () => {
                                     placeholder="Available Date"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('availableDate', { required: 'Date is required.', pattern: { message: 'Invalid Dates.' } })}
+                                    value={availableDate ? new Date(availableDate).toISOString().substr(0, 10) : ''}
                                 />
                                 {errors.availableDate && <p className="text-red-500 text-xs">{errors.availableDate.message}</p>}
                             </div>
@@ -100,12 +107,13 @@ const UpdateHomeModal = () => {
                                     placeholder="City"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('city', { required: 'City is required' })}
+                                    defaultValue={city}
                                 />
                                 {errors.city && <p className="text-red-500 text-xs">{errors.city.message}</p>}
                             </div>
 
                             <div>
-                                <label htmlFor="bedrooms" className="block mb-2 text-sm">Bathrooms</label>
+                                <label htmlFor="bedrooms" className="block mb-2 text-sm">Bedrooms</label>
                                 <input
                                     type="number"
                                     name="bedrooms"
@@ -113,6 +121,7 @@ const UpdateHomeModal = () => {
                                     placeholder="Number of Bedrooms"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('bedrooms', { required: 'Number of Bedrooms is required' })}
+                                    defaultValue={bedrooms}
                                 />
                                 {errors.bathrooms && <p className="text-red-500 text-xs">{errors.bathrooms.message}</p>}
                             </div>
@@ -125,6 +134,7 @@ const UpdateHomeModal = () => {
                                     placeholder="Number of Bathrooms"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('bathrooms', { required: 'Number of Bathrooms is required' })}
+                                    defaultValue={bathrooms}
                                 />
                                 {errors.bathrooms && <p className="text-red-500 text-xs">{errors.bathrooms.message}</p>}
                             </div>
@@ -138,6 +148,7 @@ const UpdateHomeModal = () => {
                                     placeholder="Room Size"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('roomSize', { required: 'Room Size is required' })}
+                                    defaultValue={roomSize}
                                 />
                                 {errors.roomSize && <p className="text-red-500 text-xs">{errors.roomSize.message}</p>}
                             </div>
@@ -151,6 +162,7 @@ const UpdateHomeModal = () => {
                                     placeholder='Image URL'
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('picture', { required: 'Picture is required' })}
+                                    defaultValue={imgUrl}
                                 />
                                 {errors.picture && <p className="text-red-500 text-xs">{errors.picture.message}</p>}
                             </div>
@@ -164,6 +176,7 @@ const UpdateHomeModal = () => {
                                     placeholder="Rent per Month"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('rent', { required: 'Rent per Month is required' })}
+                                    defaultValue={rent}
                                 />
                                 {errors.rent && <p className="text-red-500 text-xs">{errors.rent.message}</p>}
                             </div>
@@ -180,6 +193,8 @@ const UpdateHomeModal = () => {
                                             placeholder="Phone Number"
                                             className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                             {...field}
+                                            value={field.value || phoneNumber || ''}
+                                            onChange={(value) => field.onChange(value)}
                                         />
                                     )}
                                 />
@@ -194,6 +209,7 @@ const UpdateHomeModal = () => {
                                     placeholder="Description"
                                     className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800"
                                     {...register('description', { required: 'Description is required' })}
+                                    defaultValue={description}
                                 />
                                 {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
                             </div>
@@ -201,7 +217,7 @@ const UpdateHomeModal = () => {
 
                         <div className="space-y-2 mt-3">
                             <div>
-                                <button type="submit" className="w-full px-8 py-3 font-semibold rounded text-white btn-primary">Add Home</button>
+                                <button type="submit" className="w-full px-8 py-3 font-semibold rounded text-white btn-primary">Update Home</button>
                             </div>
                         </div>
                     </form>

@@ -105,7 +105,7 @@ const AddHomeModal = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="bedrooms" className="block mb-2 text-sm">Bathrooms</label>
+                                <label htmlFor="bedrooms" className="block mb-2 text-sm">Bedrooms</label>
                                 <input
                                     type="number"
                                     name="bedrooms"

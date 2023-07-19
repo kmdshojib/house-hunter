@@ -1,50 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import AddHomeModal from '../Modal/AddHomeModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { getHomeByIdStart } from '../../features/gethomebyid/getHomebyIdSlice';
+
 import instance from '../../api/axios';
 import { toast } from 'react-toastify';
+import UpdateHomeModal from '../Modal/UpdateHomeModal';
+import { getHomeByIdStart } from '../../features/gethomebyid/getHomebyIdSlice';
 
 
 const OwnerDashboard = () => {
-  const dispatch = useDispatch();
   const data = useSelector((state) => state);
-  const [isLoading, setIsLoading] = useState(true);
-  const [homeData, setHomeData] = useState(data)
+  const dispatch = useDispatch()
+
   const { auth } = data;
+  const { getHomeById } = data;
+  const { isLoading } = getHomeById;
   const { user } = auth;
   const userData = JSON.parse(user)
 
   useEffect(() => {
+    dispatch(getHomeByIdStart(userData._id))
 
-    instance.get(`/home/gethomebyid/${userData._id}`)
-      .then((result) => {
-        const data = result.data;
-        setHomeData(data)
-        setIsLoading(false)
-      }).catch(err => {
-        console.log(err)
-      })
+  }, [dispatch, userData._id])
 
-  }, [userData])
-
+  console.log({ getHomeById, isLoading })
   const handleDelete = (id) => {
     console.log(id)
-    setIsLoading(true);
+
     instance
       .delete(`/home/deleteHome/${id}`)
       .then((result) => {
         console.log(result);
         if (result.status === 200) {
           toast.success("Deleted successfully!");
-          setIsLoading(false);
         }
       })
       .catch((error) => {
         console.error(error);
-        setIsLoading(false);
       });
   };
+
 
 
   return (
@@ -79,13 +74,28 @@ const OwnerDashboard = () => {
                   <td colSpan="5" className="text-center py-4">Loading ...</td>
                 </tr>
               ) : (
-                homeData.map((item, index) => (
+                getHomeById?.getDataById?.map((item, index) => (
                   <tr className="hover:bg-gray-100" key={index}>
                     <th>{index + 1}</th>
                     <td className="truncate">{item.houseName}</td>
                     <td className="truncate">{item.city}, {item.address}</td>
                     <td className="truncate cursor-pointer">
-                      <span className="text-blue-500 underline">Edit</span>
+                      <label htmlFor="updateHomeModal" className="text-blue-500 underline">Edit</label>
+                      <UpdateHomeModal
+                        id={item._id}
+                        houseName={item.houseName}
+                        address={item.address}
+                        availableDate={item.availableDate}
+                        city={item.city}
+                        bathrooms={item.bathrooms}
+                        roomSize={item.roomSize}
+                        imgUrl={item.imgUrl}
+                        rent={item.monthlyRent}
+                        phoneNumber={item.phoneNumber}
+                        description={item.description}
+                        bedrooms={item.bedrooms}
+                        userId={item.userId}
+                      />
                     </td>
                     <td onClick={() => handleDelete(item._id)} className="truncate cursor-pointer">
                       <span className="text-red-500 underline">Delete</span>

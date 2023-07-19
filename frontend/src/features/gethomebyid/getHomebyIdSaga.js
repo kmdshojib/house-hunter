@@ -1,26 +1,25 @@
-import { takeLatest, call, put, all } from 'redux-saga/effects';
-import { getHomeByIdFailure, getHomeByIdStart, getHomeByIdSuccess } from './getHomebyIdSlice';
+import { takeLatest, call, put } from 'redux-saga/effects';
+import { getHomeByIdFailure, getHomeByIdSuccess } from './getHomebyIdSlice';
 import instance from '../../api/axios';
 
-function* fetchHomeById(action) {
+function* getDataByIdSaga(action) {
   try {
-    yield put(getHomeByIdStart());
-    const id = action.payload;
-    const response = yield call(instance.get, `/home/gethomebyid/${id}`);
-    const data = response.data; // assuming the response contains the data you need
 
-    yield put(getHomeByIdSuccess(data));
+    const id = action.payload;
+
+    const token = localStorage.getItem('token');
+
+    console.log({ id, token });
+    const response = yield call(instance.get, `/home/gethomebyid/${id}`)
+
+    yield put(getHomeByIdSuccess(response.data));
+
   } catch (error) {
+
     yield put(getHomeByIdFailure(error.message));
   }
 }
 
-function* watchFetchHomeById() {
-  yield takeLatest(getHomeByIdStart.type, fetchHomeById);
+export default function* getHomeSaga() {
+  yield takeLatest("homeById/getHomeByIdStart", getDataByIdSaga);
 }
-
-function* getHomeByIdSaga() {
-  yield all([watchFetchHomeById()]);
-}
-
-export default getHomeByIdSaga;

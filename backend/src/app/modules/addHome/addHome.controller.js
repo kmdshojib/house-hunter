@@ -88,37 +88,29 @@ export const deleteHomeById = async (req, res) => {
 };
 // update data
 export const updateHomeByUserId = async (req, res) => {
-    const userId = req.params.id;
-
+    const id = req.params.id;
+    console.log(id);
     try {
-        const token = req.headers.authorization;
-        const decodedToken = verifyToken(token);
-
-        if (!decodedToken) {
-            return res.status(401).send('Unauthorized');
-        }
-
-        const { newData } = req.body;
-
-        const updateData = await addHomeModel.findOneAndUpdate(
-            { userId: userId },
-            { newData },
-            { new: true }
-        );
-
-        if (!updateData) {
-            return res.status(404).send('No Data Found');
-        }
-
-        const getData = await addHomeModel.find({ userId: userId });
-
-        if (!getData || getData.length === 0) {
-            return res.status(404).send('No Data Found');
-        }
-
-        return res.status(200).send(getData);
+      const token = req.headers.authorization;
+      const decodedToken = verifyToken(token);
+  
+      if (!decodedToken) {
+        return res.status(401).send('Unauthorized');
+      }
+  
+      const  newData  = req.body;
+      const updateData = await addHomeModel.findByIdAndUpdate(id, newData, {
+        new: true
+      });
+  
+      if (!updateData) {
+        return res.status(404).send('No Data Found');
+      }
+  
+      return res.status(200).send(updateData);
     } catch (error) {
-        console.error(error);
-        return res.status(500).send('An error occurred while updating the home by ID.');
+      console.error(error);
+      return res.status(500).send('An error occurred while updating the home by ID.');
     }
-};
+  };
+  
