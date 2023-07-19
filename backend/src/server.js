@@ -1,11 +1,21 @@
 import mongoose from "mongoose"
 import app from "./app.js";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const port = 5000;
 
+const mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/`;
+
+
+
 const main = async () => {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/house-hunter');
+        await mongoose.connect(mongoDBUrl, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
 
         console.log("DB connection established");
 
