@@ -3,23 +3,29 @@ import { addHomeModel } from "./addHome.model.js";
 import { createHomeToDatabase } from "./home.service.js";
 
 export const getAllHome = async (req, res) => {
-    const userId = req.params.id
 
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
     try {
+        const skip = (page - 1) * limit;
 
-        const getData = await addHomeModel.find({}, { userId: 0 });
+        const getData = await addHomeModel
+            .find({}, { userId: 0 })
+            .skip(skip)
+            .limit(limit);
 
         if (!getData || getData.length === 0) {
             return res.status(404).send("No Data Found");
         }
 
         return res.status(200).send(getData);
-
     } catch (error) {
         console.error(error);
-        return res.status(500).send('An error occurred while retrieving the home by ID.');
+        return res.status(500).send("An error occurred while retrieving the home by ID.");
     }
 };
+
+
 
 export const createHome = async (req, res) => {
     try {
@@ -46,11 +52,13 @@ export const createHome = async (req, res) => {
 };
 
 // get data
+
 export const getHomeByUserId = async (req, res) => {
     const userId = req.params.id
 
     try {
         const token = req.headers.authorization;
+
         const decodedToken = verifyToken(token);
 
         if (!decodedToken) {

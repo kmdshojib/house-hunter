@@ -6,9 +6,12 @@ import instance from '../../api/axios';
 import { toast } from 'react-toastify';
 import UpdateHomeModal from '../Modal/UpdateHomeModal';
 import { getHomeByIdStart } from '../../features/gethomebyid/getHomebyIdSlice';
+import useTitle from '../../hooks/useTitle';
+
 
 
 const OwnerDashboard = () => {
+  useTitle("ownership dashboard");
   const data = useSelector((state) => state);
   const dispatch = useDispatch()
 
@@ -33,6 +36,7 @@ const OwnerDashboard = () => {
         console.log(result);
         if (result.status === 200) {
           toast.success("Deleted successfully!");
+          dispatch(getHomeByIdStart(userData._id))
         }
       })
       .catch((error) => {
@@ -47,7 +51,7 @@ const OwnerDashboard = () => {
       {/* dashboard header */}
       <div className="flex justify-between mt-5 mb-5">
         <div>
-          <h3 className="text-center mt-1 text-2xl">Hello, {userData.name}</h3>
+          <h3 className="text-center mt-1 text-2xl">Hello, {userData.name} welcome to to your OwnerDashboard </h3>
         </div>
         <div>
           <label htmlFor="addHomeModal" className="btn btn-primary">Add Home</label>

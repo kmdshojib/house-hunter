@@ -2,8 +2,10 @@ import React from 'react'
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import instance from './../api/axios';
+import useTitle from '../hooks/useTitle';
 
 const SignUp = () => {
+    useTitle("Sign Up");
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate()
     const handleFormSubmit = async (data) => {

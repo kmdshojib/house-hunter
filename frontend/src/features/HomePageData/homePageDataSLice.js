@@ -4,6 +4,7 @@ const initialState = {
     homeData: null,
     error: null,
     isLoading: false,
+    currentPage: 1
 }
 const homePageDataSLice = createSlice({
     name: "homepage",
@@ -21,6 +22,9 @@ const homePageDataSLice = createSlice({
             state.error = action.payload;
             state.isLoading = false;
         },
+        setCurrentPage(state, action) {
+            state.currentPage = action.payload;
+        },
     },
 });
 
@@ -28,6 +32,7 @@ export const {
     homePageStart,
     homePageSuccess,
     homePageFailure,
+    setCurrentPage
 } = homePageDataSLice.actions;
 
 export default homePageDataSLice.reducer;

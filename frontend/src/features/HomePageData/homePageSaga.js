@@ -3,10 +3,10 @@ import instance from '../../api/axios';
 import { homePageFailure, homePageSuccess } from './homePageDataSLice';
 
 
-function* fetchHomeData() {
-    try {
+function* fetchHomeData(action) {
 
-        const response = yield call(instance.get, `/home/getAll`)
+    try {
+        const response = yield call(instance.get, `/home/getAll?page=${action.payload}`)
 
         yield put(homePageSuccess(response.data));
 

@@ -1,13 +1,14 @@
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import instance from './../../api/axios';
 import { toast } from 'react-toastify';
 import PhoneInput from "react-phone-input-2";
+import { getHomeByIdStart } from '../../features/gethomebyid/getHomebyIdSlice';
 
 const AddHomeModal = () => {
     const { control, register, handleSubmit, reset, formState: { errors } } = useForm();
-
+    const dispatch = useDispatch();
     const { user, isLoading } = useSelector((state) => state.auth);
 
     const jsonUser = JSON.parse(user)
@@ -32,6 +33,7 @@ const AddHomeModal = () => {
             .then(res => {
                 if (res) {
                     reset()
+                    dispatch(getHomeByIdStart(jsonUser._id))
                     toast.success("Home added successfully!")
                 }
             }).catch(eror => {

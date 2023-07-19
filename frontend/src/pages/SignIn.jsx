@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../features/auth/authSlice';
+import useTitle from '../hooks/useTitle';
 
 const SignIn = () => {
+    useTitle("Sign In");
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { user } = useSelector((state) => state.auth);
     const navigate = useNavigate()
