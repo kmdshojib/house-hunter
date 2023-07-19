@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-phone-input-2/lib/style.css'
 
 import { Provider } from 'react-redux';
-
+import { ToastContainer } from 'react-toastify';
 import store from './features/store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,6 +15,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <App />
+      <ToastContainer />
     </Provider>
   </React.StrictMode>
 );

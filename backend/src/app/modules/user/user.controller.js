@@ -12,33 +12,42 @@ export const createUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-    const { email, password } = await req.body;
-    const authToken = process.env.AUTH_TOKEN
+    const { email, password } = req.body;
+    const authToken = process.env.AUTH_TOKEN;
 
-    const user = await userModel.findOne({ email: email });
+    try {
+        const user = await userModel.findOne({ email });
 
-    if (!user) {
-        throw new Error("User not registered or invalid email address!");
-    };
-
-    const matchPassword = await bcrypt.compare(password, user.password);
-    if (!matchPassword) {
-        throw new Error("Opps! Invalid Password!");
-    }
-
-    const token = jwt.sign({ userId: user._id }, authToken, {
-        expiresIn: "6h"
-    })
-
-    res.status(200).json({
-        data: {
-            token: token,
-            user: {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                type: user.type,
-            }
+        if (!user) {
+            return res.status(400).json({ error: 'User not registered or invalid email address!' });
         }
-    })
-};
+
+        const matchPassword = await bcrypt.compare(password, user.password);
+        if (!matchPassword) {
+            return res.status(400).json({ error: 'Invalid password!' });
+        }
+
+        const token = jwt.sign({ userId: user._id }, authToken, { expiresIn: '6h' });
+
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 6 * 60 * 60 * 1000,
+        });
+
+        res.status(200).json({
+            data: {
+                token,
+                user: {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    type: user.type,
+                },
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}

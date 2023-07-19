@@ -27,7 +27,7 @@ const SignUp = () => {
                 <div className="space-y-4">
                     <div>
                         <label htmlFor="name" className="block mb-2 text-sm">Full Name</label>
-                        <input {...register("name", { required: true })} type="name" name="name" id="name" placeholder="Name" className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800" required />
+                        <input {...register("name", { required: true })} type="text" name="name" id="name" placeholder="Name" className="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-100 text-gray-800" required />
                     </div>
                     <div>
                         <label htmlFor="email" className="block mb-2 text-sm">Email address</label>
