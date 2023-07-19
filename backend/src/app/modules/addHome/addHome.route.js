@@ -1,7 +1,9 @@
 import express from 'express';
-import { createHome, deleteHomeById, getHomeByUserId, updateHomeByUserId } from './addHome.controller.js';
+import { createHome, deleteHomeById, getAllHome, getHomeByUserId, updateHomeByUserId } from './addHome.controller.js';
 
 const addHomeRoute = express.Router();
+
+addHomeRoute.get("/getAll", getAllHome)
 
 addHomeRoute.post("/addHome", createHome)
 

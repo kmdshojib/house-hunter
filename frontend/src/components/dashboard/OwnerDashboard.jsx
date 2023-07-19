@@ -58,53 +58,56 @@ const OwnerDashboard = () => {
       {/* table */}
       <div className='mt-3 mb-5'>
         <div className="overflow-x-auto">
-          <table className="table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>House Name</th>
-                <th>City & Address</th>
-                <th>Edit Your Home</th>
-                <th>Delete Your Home</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading ? (
+          {getHomeById?.getDataById?.length > 0 ?
+            <table className="table">
+              <thead>
                 <tr>
-                  <td colSpan="5" className="text-center py-4">Loading ...</td>
+                  <th></th>
+                  <th>House Name</th>
+                  <th>City & Address</th>
+                  <th>Edit Your Home</th>
+                  <th>Delete Your Home</th>
                 </tr>
-              ) : (
-                getHomeById?.getDataById?.map((item, index) => (
-                  <tr className="hover:bg-gray-100" key={index}>
-                    <th>{index + 1}</th>
-                    <td className="truncate">{item.houseName}</td>
-                    <td className="truncate">{item.city}, {item.address}</td>
-                    <td className="truncate cursor-pointer">
-                      <label htmlFor="updateHomeModal" className="text-blue-500 underline">Edit</label>
-                      <UpdateHomeModal
-                        id={item._id}
-                        houseName={item.houseName}
-                        address={item.address}
-                        availableDate={item.availableDate}
-                        city={item.city}
-                        bathrooms={item.bathrooms}
-                        roomSize={item.roomSize}
-                        imgUrl={item.imgUrl}
-                        rent={item.monthlyRent}
-                        phoneNumber={item.phoneNumber}
-                        description={item.description}
-                        bedrooms={item.bedrooms}
-                        userId={item.userId}
-                      />
-                    </td>
-                    <td onClick={() => handleDelete(item._id)} className="truncate cursor-pointer">
-                      <span className="text-red-500 underline">Delete</span>
-                    </td>
+              </thead>
+              <tbody>
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-4">Loading ...</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  getHomeById?.getDataById?.map((item, index) => (
+                    <tr className="hover:bg-gray-100" key={index}>
+                      <th>{index + 1}</th>
+                      <td className="truncate">{item.houseName}</td>
+                      <td className="truncate">{item.city}, {item.address}</td>
+                      <td className="truncate cursor-pointer">
+                        <label htmlFor="updateHomeModal" className="text-blue-500 underline">Edit</label>
+                        <UpdateHomeModal
+                          id={item._id}
+                          houseName={item.houseName}
+                          address={item.address}
+                          availableDate={item.availableDate}
+                          city={item.city}
+                          bathrooms={item.bathrooms}
+                          roomSize={item.roomSize}
+                          imgUrl={item.imgUrl}
+                          rent={item.monthlyRent}
+                          phoneNumber={item.phoneNumber}
+                          description={item.description}
+                          bedrooms={item.bedrooms}
+                          userId={item.userId}
+                        />
+                      </td>
+                      <td onClick={() => handleDelete(item._id)} className="truncate cursor-pointer">
+                        <span className="text-red-500 underline">Delete</span>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+            : <div>No Propertices yet! Pease CLick Add home to add new Propertice!</div>
+          }
         </div>
       </div>
     </div>

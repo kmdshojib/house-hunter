@@ -2,6 +2,25 @@ import { verifyToken } from "../../../../verfifyToken.js";
 import { addHomeModel } from "./addHome.model.js";
 import { createHomeToDatabase } from "./home.service.js";
 
+export const getAllHome = async (req, res) => {
+    const userId = req.params.id
+
+    try {
+
+        const getData = await addHomeModel.find({}, { userId: 0 });
+
+        if (!getData || getData.length === 0) {
+            return res.status(404).send("No Data Found");
+        }
+
+        return res.status(200).send(getData);
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('An error occurred while retrieving the home by ID.');
+    }
+};
+
 export const createHome = async (req, res) => {
     try {
         const token = req.headers.authorization;
@@ -91,26 +110,25 @@ export const updateHomeByUserId = async (req, res) => {
     const id = req.params.id;
     console.log(id);
     try {
-      const token = req.headers.authorization;
-      const decodedToken = verifyToken(token);
-  
-      if (!decodedToken) {
-        return res.status(401).send('Unauthorized');
-      }
-  
-      const  newData  = req.body;
-      const updateData = await addHomeModel.findByIdAndUpdate(id, newData, {
-        new: true
-      });
-  
-      if (!updateData) {
-        return res.status(404).send('No Data Found');
-      }
-  
-      return res.status(200).send(updateData);
+        const token = req.headers.authorization;
+        const decodedToken = verifyToken(token);
+
+        if (!decodedToken) {
+            return res.status(401).send('Unauthorized');
+        }
+
+        const newData = req.body;
+        const updateData = await addHomeModel.findByIdAndUpdate(id, newData, {
+            new: true
+        });
+
+        if (!updateData) {
+            return res.status(404).send('No Data Found');
+        }
+
+        return res.status(200).send(updateData);
     } catch (error) {
-      console.error(error);
-      return res.status(500).send('An error occurred while updating the home by ID.');
+        console.error(error);
+        return res.status(500).send('An error occurred while updating the home by ID.');
     }
-  };
-  
+};

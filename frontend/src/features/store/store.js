@@ -4,6 +4,7 @@ import { createLogger } from "redux-logger";
 import rootSaga from './rootsaga';
 import authSlice from "../auth/authSlice";
 import getHomebyIdSlice from "../gethomebyid/getHomebyIdSlice";
+import homePageDataSLice from "../HomePageData/homePageDataSLice";
 
 const logger = createLogger();
 const sagaMiddleware = createSagaMiddleware();
@@ -13,7 +14,8 @@ const middleware =  (getDefalutMiddleware) => getDefalutMiddleware().concat(logg
 const store = configureStore({
     reducer: {
         auth: authSlice,
-        getHomeById: getHomebyIdSlice
+        getHomeById: getHomebyIdSlice,
+        homeData: homePageDataSLice
     },
     middleware: middleware
 });
