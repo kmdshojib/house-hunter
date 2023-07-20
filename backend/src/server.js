@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 const mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/`;
 
@@ -19,7 +19,7 @@ const main = async () => {
 
         console.log("DB connection established");
 
-        app.listen(port, () => {
+        app.listen(port, "0.0.0.0", () => {
             console.log(`House Hunter listening on port ${port} `)
         })
 
