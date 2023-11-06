@@ -6,10 +6,13 @@ dotenv.config()
 
 const port = process.env.PORT || 5000;
 
-const mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/`;
 
-
-
+let mongoDBUrl;
+if (process.env.NODE_ENV === 'production') {
+    mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/`
+} else {
+    mongoDBUrl = "mongodb://127.0.0.1:27017/house"
+}
 const main = async () => {
     try {
         await mongoose.connect(mongoDBUrl, {
